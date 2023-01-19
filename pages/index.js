@@ -3,6 +3,12 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import ProductCard from "../components/ProductCard";
 
+// Todo
+// *Add a loading state and page
+// *Add a no item found state
+// *Show an error if something goes wrong
+// !....................................! //
+
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [queryText, setQueryText] = useState("");
@@ -47,29 +53,38 @@ export default function Home() {
           className='text-sm md:text-md  outline-none bg-gray-300 flex-grow p-2 rounded-md caret-slate-500'
         />
       </div>
-
-      <main className='flex  items-center justify-center mx-auto'>
-        <div className='mt-6  shadow-lg p-4 shadow-slate-600'>
-          {categoriesNames?.map((category) => (
-            <div>
-              <h2
-                key={category}
-                className='text-2xl mt-2 text-gray-600 tracking-widest capitalize'>
-                {category}
-              </h2>
-              <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-10'>
-                {product
-                  .filter((p) => p.category === category)
-                  .map((product) => (
-                    <div className='py-6 border-b-2'>
-                      <ProductCard {...product} />
-                    </div>
-                  ))}
+      {products.length > 0 ? (
+        <main className='flex  items-center justify-center mx-auto'>
+          <div className='mt-6  shadow-lg p-4 shadow-slate-600'>
+            {categoriesNames?.map((category) => (
+              <div>
+                <h2
+                  key={category}
+                  className='text-2xl mt-2 text-gray-600 tracking-widest capitalize'>
+                  {category}
+                </h2>
+                <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-10'>
+                  {product
+                    .filter((p) => p.category === category)
+                    .map((product) => (
+                      <div className='py-6 border-b-2'>
+                        <ProductCard {...product} />
+                      </div>
+                    ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </main>
+      ) : (
+        <div className=' bg-black h-screen flex items-center justify-center p-4'>
+          <div className='flex items-center border  border-white rounded-md shadow-md shadow-green-600 animate-pulse mx-auto justify-center'>
+            <p className='text-white p-4 text-lg w-40 font-semibold text-center'>
+              Loading...
+            </p>
+          </div>
         </div>
-      </main>
+      )}
     </>
   );
 }
