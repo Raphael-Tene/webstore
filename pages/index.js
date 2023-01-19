@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import ProductCard from "../components/ProductCard";
+import Footer from "../components/Footer";
 
 // Todo
 // *Add a loading state and page
@@ -63,20 +64,24 @@ export default function Home() {
           <div className='mt-6  shadow-lg p-4 shadow-slate-600'>
             {categoriesNames?.map((category) => (
               <div>
-                <h2
-                  key={category}
-                  className='text-2xl mt-2 text-gray-600 tracking-widest capitalize'>
-                  {category}
-                </h2>
-                <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-10'>
-                  {product
-                    .filter((p) => p.category === category)
-                    .map((product) => (
-                      <div className='py-6 border-b-2'>
-                        <ProductCard {...product} />
-                      </div>
-                    ))}
-                </div>
+                {product.find((p) => p.category === category) && (
+                  <div>
+                    <h2
+                      key={category}
+                      className='text-2xl mt-2 text-gray-600 tracking-widest capitalize'>
+                      {category}
+                    </h2>
+                    <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-10'>
+                      {product
+                        .filter((p) => p.category === category)
+                        .map((product) => (
+                          <div className='py-6 border-b-2'>
+                            <ProductCard {...product} />
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -90,18 +95,19 @@ export default function Home() {
           </div>
         </div>
       )}
+      <Footer />
     </>
   );
 }
 
-// export async function getServerSideProps() {
-//   const products = await fetch("/api/products").then((response) =>
-//     response.json()
-//   );
+// Todo
+// *Enable sever side data fetching
 
+// export async function getServerSideProps() {
+//   const products = await productClient();
 //   return {
 //     props: {
-//       products,
+//       products: JSON.parse(JSON.stringify(products)),
 //     },
 //   };
 // }
