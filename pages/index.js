@@ -12,11 +12,16 @@ import ProductCard from "../components/ProductCard";
 export default function Home() {
   const [products, setProducts] = useState([]);
   const [queryText, setQueryText] = useState("");
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((json) => setProducts(json));
+    try {
+      fetch("/api/products")
+        .then((res) => res.json())
+        .then((json) => setProducts(json));
+    } catch (error) {
+      setError(true);
+    }
   }, []);
 
   const categoriesNames = [
@@ -53,7 +58,7 @@ export default function Home() {
           className='text-sm md:text-md  outline-none bg-gray-300 flex-grow p-2 rounded-md caret-slate-500'
         />
       </div>
-      {products.length > 0 ? (
+      {products.length > 0 && !error ? (
         <main className='flex  items-center justify-center mx-auto'>
           <div className='mt-6  shadow-lg p-4 shadow-slate-600'>
             {categoriesNames?.map((category) => (
