@@ -1,16 +1,32 @@
+// @ts-nocheck
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
+import ProductCard from "../components/ProductCard";
 
 export default function Home() {
-  const [products, setProducts] = useState([]);
+  const [productsInfo, setProductsInfo] = useState([]);
+  const [queryText, setQueryText] = useState("");
 
   useEffect(() => {
-    const productData = fetch("/api/products")
+    fetch("/api/products")
       .then((res) => res.json())
-      .then((json) => setProducts(json));
+      .then((json) => setProductsInfo(json));
   }, []);
-  console.log(products);
+
+  const categoriesNames = [
+    ...new Set(productsInfo?.map((product) => product?.category)),
+  ];
+
+  let product;
+
+  if (queryText) {
+    product = productsInfo?.filter((product) =>
+      product.name.toLowerCase().includes(queryText.toLowerCase())
+    );
+  } else {
+    product = productsInfo;
+  }
+
   return (
     <>
       <Head>
@@ -22,37 +38,36 @@ export default function Home() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <main>
-        <div className='p-5'>
-          <div>
-            <h2 className='text-2xl text-gray-600 tracking-widest'>Mobiles</h2>
-            <div className='py-4'>
-              <div className='w-64'>
-                <div className='rounded-xl bg-blue-100 p-5'>
-                  <Image
-                    className='object-contain'
-                    src='/products/iphone.png'
-                    width={200}
-                    height={300}
-                    alt='iphone'
-                  />
-                </div>
-                <div className='mt-2'>
-                  <h3 className='font-bold text-lg'>Iphone 14</h3>
-                </div>
-                <p className='text-sm leading-4 mt-2'>
-                  Excepteur cupidatat voluptate ipsum non deserunt exercitation
-                  duis cillum amet adipisicing aliqua.
-                </p>
-                <div className='flex mt-1 '>
-                  <div className='grow font-bold text-2xl'>$899</div>
-                  <button className='px-3 py-2 rounded-xl bg-emerald-400  text-white hover:opacity-50'>
-                    +
-                  </button>
-                </div>
+      <div className='flex justify-center p-4 md:max-w-2xl mx-auto items-center'>
+        <input
+          value={queryText}
+          onChange={(e) => setQueryText(e.target.value)}
+          type='text'
+          placeholder='Search for product...'
+          className='text-sm md:text-md  outline-none bg-gray-300 flex-grow p-2 rounded-md caret-slate-500'
+        />
+      </div>
+
+      <main className='flex  items-center justify-center mx-auto'>
+        <div className='mt-6  shadow-lg p-4 shadow-slate-600'>
+          {categoriesNames?.map((category) => (
+            <div>
+              <h2
+                key={category}
+                className='text-2xl mt-2 text-gray-600 tracking-widest capitalize'>
+                {category}
+              </h2>
+              <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-10'>
+                {products
+                  .filter((p) => p.category === category)
+                  .map((product) => (
+                    <div className='py-6 border-b-2'>
+                      <ProductCard {...product} />
+                    </div>
+                  ))}
               </div>
             </div>
-          </div>
+          ))}
         </div>
       </main>
     </>
@@ -60,13 +75,13 @@ export default function Home() {
 }
 
 // export async function getServerSideProps() {
-//   const products = await fetch("/api/products").then((response) =>
+//   const productsInfo = await fetch("/api/productsInfo").then((response) =>
 //     response.json()
 //   );
 
 //   return {
 //     props: {
-//       products,
+//       productsInfo,
 //     },
 //   };
 // }
