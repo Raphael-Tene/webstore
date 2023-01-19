@@ -4,27 +4,27 @@ import Head from "next/head";
 import ProductCard from "../components/ProductCard";
 
 export default function Home() {
-  const [productsInfo, setProductsInfo] = useState([]);
+  const [products, setProducts] = useState([]);
   const [queryText, setQueryText] = useState("");
 
   useEffect(() => {
     fetch("/api/products")
       .then((res) => res.json())
-      .then((json) => setProductsInfo(json));
+      .then((json) => setProducts(json));
   }, []);
 
   const categoriesNames = [
-    ...new Set(productsInfo?.map((product) => product?.category)),
+    ...new Set(products?.map((product) => product?.category)),
   ];
 
   let product;
 
   if (queryText) {
-    product = productsInfo?.filter((product) =>
+    product = products?.filter((product) =>
       product.name.toLowerCase().includes(queryText.toLowerCase())
     );
   } else {
-    product = productsInfo;
+    product = products;
   }
 
   return (
@@ -43,7 +43,7 @@ export default function Home() {
           value={queryText}
           onChange={(e) => setQueryText(e.target.value)}
           type='text'
-          placeholder='Search for product...'
+          placeholder='Search for products...'
           className='text-sm md:text-md  outline-none bg-gray-300 flex-grow p-2 rounded-md caret-slate-500'
         />
       </div>
@@ -58,7 +58,7 @@ export default function Home() {
                 {category}
               </h2>
               <div className='grid sm:grid-cols-2 md:grid-cols-3 gap-10'>
-                {products
+                {product
                   .filter((p) => p.category === category)
                   .map((product) => (
                     <div className='py-6 border-b-2'>
@@ -75,13 +75,13 @@ export default function Home() {
 }
 
 // export async function getServerSideProps() {
-//   const productsInfo = await fetch("/api/productsInfo").then((response) =>
+//   const products = await fetch("/api/products").then((response) =>
 //     response.json()
 //   );
 
 //   return {
 //     props: {
-//       productsInfo,
+//       products,
 //     },
 //   };
 // }
