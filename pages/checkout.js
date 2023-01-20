@@ -37,7 +37,13 @@ export default function checkout() {
               <div className='flex'>
                 <div className='grow'>${item.price}</div>
                 <div>
+                  <button className='border px-2 border-emerald-300 text-emerald-500 rounded-lg'>
+                    -
+                  </button>
                   {selectedProducts.filter((id) => id === item._id).length}
+                  <button className='border px-2 text-white border-emerald-300 bg-emerald-500 rounded-lg'>
+                    +
+                  </button>
                 </div>
               </div>
             </div>
