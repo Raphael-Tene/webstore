@@ -89,8 +89,8 @@ export default function Home() {
       ) : (
         <div className=' bg-black h-screen flex items-center justify-center p-4'>
           <div className='flex items-center border  border-white rounded-md shadow-md shadow-green-600 animate-pulse mx-auto justify-center'>
-            <p className='text-white p-4 text-lg w-40 font-semibold text-center'>
-              Loading...
+            <p className='text-white text-sm p-4 md:text-lg  whitespace-nowrap font-semibold text-center'>
+              Loading Products...
             </p>
           </div>
         </div>
