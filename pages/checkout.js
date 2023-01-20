@@ -18,7 +18,15 @@ export default function checkout() {
   return (
     <div>
       {!productInfo.length && <div>No Products in your shopping cart.</div>}
-      {productInfo.length && productInfo.map((item) => <div>{item._id}</div>)}
+      {productInfo.length &&
+        productInfo.map((item) => (
+          <div>
+            {
+              // @ts-ignore
+              item._id
+            }
+          </div>
+        ))}
       <Footer />
     </div>
   );
