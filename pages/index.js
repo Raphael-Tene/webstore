@@ -1,8 +1,9 @@
 // @ts-nocheck
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import ProductCard from "../components/ProductCard";
 import Footer from "../components/Footer";
+import { ProductContext } from "../components/ProductsContext";
 
 // Todo
 // *Add a loading state and page
@@ -11,6 +12,16 @@ import Footer from "../components/Footer";
 // !....................................! //
 
 export default function Home() {
+  // checking for a success purchase
+  const { setSelectedProducts } = useContext(ProductContext);
+  const [success, setSuccess] = useState(false);
+  useEffect(() => {
+    if (window.location.href.includes("success")) {
+      setSelectedProducts([]);
+      setSuccess(true);
+    }
+  }, []);
+
   const [products, setProducts] = useState([]);
   const [queryText, setQueryText] = useState("");
   const [error, setError] = useState(false);
@@ -50,6 +61,18 @@ export default function Home() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+      {success && (
+        <div className='flex items-center justify-center'>
+          {" "}
+          <div className='p-5 animate-pulse text-center  w-72'>
+            {" "}
+            <div className='mb-5 bg-emerald-300 text-white text-lg p-5 rounded-lg'>
+              Thank you for your order
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className='flex justify-center p-4 md:max-w-2xl mx-auto items-center'>
         <input
           value={queryText}
@@ -63,7 +86,7 @@ export default function Home() {
         <main className='flex  items-center justify-center mx-auto'>
           <div className='mt-6  shadow-lg p-4 shadow-slate-600'>
             {categoriesNames?.map((category) => (
-              <div>
+              <div key={category}>
                 {product.find((p) => p.category === category) && (
                   <div>
                     <h2
